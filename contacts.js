@@ -2,6 +2,7 @@ const fs = require("fs/promises");
 const path = require("path");
 const chalk = require("chalk");
 const shortid = require("shortid");
+const process = require("process");
 
 const contactsPath = path.join(
   path.dirname(__filename),
@@ -30,7 +31,7 @@ async function removeContact(contactId) {
   );
   if (newContactsArray.length === fileContent.length) {
     console.log(chalk.red(`Contact with id ${contactId} is absent`));
-    return;
+    process.exit(1);
   }
   fs.writeFile(contactsPath, JSON.stringify(newContactsArray))
     .then((r) =>

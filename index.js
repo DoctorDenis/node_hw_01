@@ -1,8 +1,8 @@
 const path = require("path");
 const fs = require("fs/promises");
-// const argv = require("yargs").argv;
 const { Command } = require("commander");
-
+const process = require("process");
+const chalk = require("chalk");
 const {
   contactsPath,
   listContacts,
@@ -34,12 +34,49 @@ program
     "contact email, include it when adding contact"
   )
   .option(
+    "-p, --phone <string>",
+    "contact phone, include it when adding contact"
+  )
+  .option(
     "--action='remove' --id=<string>",
     "delete contact with specified id"
   );
 
 program.parse();
 const options = program.opts();
+
+const { action, id, name, email, phone } = options;
+
+switch (action) {
+  case "remove":
+    if (!id) {
+      console.log(
+        chalk.red("Missed argument for id. Please specify, e.g. --id=2")
+      );
+      process.exit(1);
+    }
+    break;
+  case "add":
+    if (!email || !name || !phone) {
+      console.log(
+        chalk.red(
+          "Missed arguments for name, phone or email. Please specify, e.g. --name='Mango' --email='mango@gmail.com' --phone='322-22-22'"
+        )
+      );
+      process.exit(1);
+    }
+    break;
+  case "get":
+    if (!id) {
+      console.log(
+        chalk.red("Missed argument for id. Please specify, e.g. --id=2")
+      );
+      process.exit(1);
+    }
+    break;
+  default:
+    break;
+}
 
 // ---------------------------------------------------------
 
